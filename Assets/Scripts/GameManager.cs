@@ -5,24 +5,22 @@ using TicTacToe;
 
 public class GameManager : MonoBehaviour
 {
+    // Marker prefabs
     public GameObject xMarker;
     public GameObject oMarker;
 
+    // Game Objects
+    private BoardManager boardManager = new BoardManager(playerIdNone, playerId1, playerId2);
+    private Camera cam;
+
+    // Player Ids
+    static private int playerIdNone = 0;
     static private int playerId1 = 1;
     static private int playerId2 = 2;
-    private BoardManager boardManager = new BoardManager(playerId1, playerId2);
-
-    private Camera cam;
-    private List<Vector3> cellCenters;
-
-
     private int currentPlayerId = 1;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        cam = Camera.main;
-        cellCenters = new List<Vector3>
+    // Center points for each cell.  See summary of BoardManager for how cells in the board are organized.
+    private List<Vector3> cellCenters = new List<Vector3>
         {
             new Vector3(-2.0f,  2.0f, 0.0f),
             new Vector3( 0.0f,  2.0f, 0.0f),
@@ -34,6 +32,11 @@ public class GameManager : MonoBehaviour
             new Vector3( 0.0f, -2.0f, 0.0f),
             new Vector3( 2.0f, -2.0f, 0.0f)
         };
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        cam = Camera.main;
     }
 
     // Update is called once per frame

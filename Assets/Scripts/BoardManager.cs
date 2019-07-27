@@ -21,8 +21,10 @@ namespace TicTacToe
     /// </summary>
     public class BoardManager
     {
-        private int player1Id;
-        private int player2Id;
+        // Values for each player
+        private int playerIdNone;
+        private int playerId1;
+        private int playerId2;
 
         private int emptyCellValue = 0;
         private int player1CellValue = 1;
@@ -41,10 +43,11 @@ namespace TicTacToe
             new List<int> {2, 4, 6}
         };
 
-        public BoardManager(int player1IdIn, int player2IdIn)
+        public BoardManager(int playerIdNoneIn, int playerId1In, int playerId2In)
         {
-            player1Id = player1IdIn;
-            player2Id = player2IdIn;
+            playerIdNone = playerIdNoneIn;
+            playerId1 = playerId1In;
+            playerId2 = playerId2In;
             cellContents = new List<int> { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         }
 
@@ -59,7 +62,7 @@ namespace TicTacToe
             // This simplifies the logic to inspect row contents later.
 
             int cellValue = emptyCellValue;
-            if (playerId == player1Id)
+            if (playerId == playerId1)
             {
                 cellValue = player1CellValue;
             }
@@ -78,15 +81,15 @@ namespace TicTacToe
             {
                 if (sum == player1CellValue * 3)
                 {
-                    return player1Id;
+                    return playerId1;
                 }
                 else if (sum == player2CellValue * 3)
                 {
-                    return player2Id;
+                    return playerId2;
                 }
             }
 
-            return 0;
+            return playerIdNone;
         }
 
         private List<int> GetRowSums()
