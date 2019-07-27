@@ -1,20 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TicTacToe;
 
 public class GameManager : MonoBehaviour
 {
     public GameObject xMarker;
     public GameObject oMarker;
+    public BoardManager boardManager = new BoardManager();
 
     private Camera cam;
     private List<Vector3> cellCenters;
+
+    private int playerId1 = 1;
+    private int playerId2 = 10;
 
     // Start is called before the first frame update
     void Start()
     {
         cam = Camera.main;
-
         cellCenters = new List<Vector3>
         {
             new Vector3(-2.0f,  2.0f, 0.0f),
@@ -36,11 +40,13 @@ public class GameManager : MonoBehaviour
         {
             Vector3 clickPosition = cam.ScreenToWorldPoint(Input.mousePosition);
             int closestCell = GetClosestCell(clickPosition);
-            Debug.Log("Closest cell: " + closestCell.ToString());
 
+            if (boardManager.IsLegalMove(closestCell))
+            {
 
-            Instantiate(xMarker, cellCenters[closestCell], Quaternion.identity);
-
+                Instantiate(xMarker, cellCenters[closestCell], Quaternion.identity);
+                boardManager.PlaceMarker(playerId1, closestCell);
+            }
         }
     }
 
