@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 namespace TicTacToe
 {
@@ -48,12 +47,16 @@ namespace TicTacToe
             playerIdNone = playerIdNoneIn;
             playerId1 = playerId1In;
             playerId2 = playerId2In;
-            cellContents = new List<int> { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            cellContents = new List<int>();
+            for (int i = 0; i < 10; i++)
+            {
+                cellContents.Add(playerIdNone);
+            }
         }
 
         public bool IsLegalMove(int cellSelected)
         {
-            return cellContents[cellSelected] == 0;
+            return cellContents[cellSelected] == playerIdNone;
         }
 
         public void PlaceMarker(int playerId, int cellId)
@@ -74,22 +77,24 @@ namespace TicTacToe
             cellContents[cellId] = cellValue;
         }
 
-        public int CheckForWin()
+        public (int, int) CheckForWin()
         {
+            int rowNum = 0;
             List<int> rowSums = GetRowSums();
             foreach(int sum in rowSums)
             {
                 if (sum == player1CellValue * 3)
                 {
-                    return playerId1;
+                    return (playerId1, rowNum);
                 }
                 else if (sum == player2CellValue * 3)
                 {
-                    return playerId2;
+                    return (playerId2, rowNum);
                 }
+                rowNum++;
             }
 
-            return playerIdNone;
+            return (playerIdNone, -1);
         }
 
         private List<int> GetRowSums()

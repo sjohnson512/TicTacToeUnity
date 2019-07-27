@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     // Game Objects
     private BoardManager boardManager = new BoardManager(playerIdNone, playerId1, playerId2);
     private Camera cam;
+    private LineRenderer lineRenderer;
 
     // Player Ids
     static private int playerIdNone = 0;
@@ -33,10 +34,43 @@ public class GameManager : MonoBehaviour
             new Vector3( 2.0f, -2.0f, 0.0f)
         };
 
+    private List<Vector3> rowStarts = new List<Vector3>
+        {
+            new Vector3(-2.8f,  2.0f, -1.0f),
+            new Vector3(-2.8f,  0.0f, -1.0f),
+            new Vector3(-2.8f, -2.0f, -1.0f),
+            new Vector3(-2.0f,  2.8f, -1.0f),
+            new Vector3( 0.0f,  2.8f, -1.0f),
+            new Vector3( 2.0f,  2.8f, -1.0f),
+            new Vector3(-2.8f,  2.8f, -1.0f),
+            new Vector3( 2.8f,  2.8f, -1.0f)
+        };
+
+    private List<Vector3> rowEnds = new List<Vector3>
+        {
+            new Vector3( 2.8f,  2.0f, -1.0f),
+            new Vector3( 2.8f,  0.0f, -1.0f),
+            new Vector3( 2.8f, -2.0f, -1.0f),
+            new Vector3(-2.0f, -2.8f, -1.0f),
+            new Vector3( 0.0f, -2.8f, -1.0f),
+            new Vector3( 2.0f, -2.8f, -1.0f),
+            new Vector3( 2.8f, -2.8f, -1.0f),
+            new Vector3(-2.8f, -2.8f, -1.0f)
+        };
+
+
     // Start is called before the first frame update
     void Start()
     {
+        // Grab the camera
         cam = Camera.main;
+
+        // Setup the lineRenderer used to draw the line through the winning row
+        lineRenderer = gameObject.AddComponent<LineRenderer>();
+        lineRenderer.positionCount = 2;
+        lineRenderer.widthMultiplier = 0.1f;
+        lineRenderer.material.color = Color.black;
+ 
     }
 
     // Update is called once per frame
@@ -61,8 +95,20 @@ public class GameManager : MonoBehaviour
                     boardManager.PlaceMarker(currentPlayerId, closestCell);
                     currentPlayerId = playerId1;
                 }
-                int winningPlayer = boardManager.CheckForWin();
-                Debug.Log(winningPlayer);
+                var (winningPlayerId, rowId) = boardManager.CheckForWin();
+                Debug.Log(winningPlayerId);
+
+                if (winningPlayerId == playerId1)
+                {
+                    lineRenderer.SetPosition(0, rowStarts[rowId]);
+                    lineRenderer.SetPosition(1, rowEnds[rowId]);
+                }
+                else if (winningPlayerId == playerId2)
+                {
+                    lineRenderer.SetPosition(0, rowStarts[rowId]);
+                    lineRenderer.SetPosition(1, rowEnds[rowId]);
+
+                }
             }
         }
     }
