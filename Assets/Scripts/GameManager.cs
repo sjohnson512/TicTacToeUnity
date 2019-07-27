@@ -5,14 +5,15 @@ using TicTacToe;
 
 public class GameManager : MonoBehaviour
 {
-    // Marker prefabs
-    public GameObject xMarker;
-    public GameObject oMarker;
 
     // Game Objects
-    private BoardManager boardManager = new BoardManager(playerIdNone, playerId1, playerId2);
+    public GameObject xMarker;
+    public GameObject oMarker;
     private Camera cam;
     private LineRenderer lineRenderer;
+
+    // Board logic
+    private BoardManager boardManager = new BoardManager(playerIdNone, playerId1, playerId2);
 
     // Player Ids
     static private int playerIdNone = 0;
