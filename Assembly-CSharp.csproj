@@ -55,7 +55,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\GameManager.cs" />
+     <Compile Include="Assets\Scripts\GameManager.cs" />
  <Reference Include="Unity.Timeline.Editor">
  <HintPath>C:/Users/user/projects/TicTacToe/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
  </Reference>

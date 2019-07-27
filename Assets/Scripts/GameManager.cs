@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public GameObject xMarker;
+    public GameObject oMarker;
 
     private Camera cam;
     private List<Vector3> cellCenters;
@@ -15,15 +17,15 @@ public class GameManager : MonoBehaviour
 
         cellCenters = new List<Vector3>
         {
-            new Vector3(-2.0f,  2.0f, -10.0f),
-            new Vector3( 0.0f,  2.0f, -10.0f),
-            new Vector3( 2.0f,  2.0f, -10.0f),
-            new Vector3(-2.0f,  0.0f, -10.0f),
-            new Vector3( 0.0f,  0.0f, -10.0f),
-            new Vector3( 2.0f,  0.0f, -10.0f),
-            new Vector3(-2.0f, -2.0f, -10.0f),
-            new Vector3( 0.0f, -2.0f, -10.0f),
-            new Vector3( 2.0f, -2.0f, -10.0f)
+            new Vector3(-2.0f,  2.0f, 0.0f),
+            new Vector3( 0.0f,  2.0f, 0.0f),
+            new Vector3( 2.0f,  2.0f, 0.0f),
+            new Vector3(-2.0f,  0.0f, 0.0f),
+            new Vector3( 0.0f,  0.0f, 0.0f),
+            new Vector3( 2.0f,  0.0f, 0.0f),
+            new Vector3(-2.0f, -2.0f, 0.0f),
+            new Vector3( 0.0f, -2.0f, 0.0f),
+            new Vector3( 2.0f, -2.0f, 0.0f)
         };
     }
 
@@ -35,6 +37,10 @@ public class GameManager : MonoBehaviour
             Vector3 clickPosition = cam.ScreenToWorldPoint(Input.mousePosition);
             int closestCell = GetClosestCell(clickPosition);
             Debug.Log("Closest cell: " + closestCell.ToString());
+
+
+            Instantiate(xMarker, cellCenters[closestCell], Quaternion.identity);
+
         }
     }
 
@@ -52,7 +58,6 @@ public class GameManager : MonoBehaviour
         // Iterate over the list of cell center locations
         foreach (Vector3 cellCenter in cellCenters)
         {
-            currentCell++;
 
             // Calculate the distance between the click and the cell center
             float distanceToCell = (clickPosition - cellCenter).sqrMagnitude;
@@ -63,6 +68,7 @@ public class GameManager : MonoBehaviour
                 closestCell = currentCell;
                 minDistance = distanceToCell;
             }
+            currentCell++;
         }
 
         return closestCell;

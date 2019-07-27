@@ -295,3 +295,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 879503a25625c1741a51a7d4e49b67d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  xMarker: {fileID: 6983268868350677835, guid: ac1f251466073ba4aa1e25c61ca429e5, type: 3}
+  oMarker: {fileID: 2650077694942741908, guid: 6ba4d7ca6a43c364d91e121739c56040, type: 3}
