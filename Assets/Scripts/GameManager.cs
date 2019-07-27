@@ -7,13 +7,14 @@ public class GameManager : MonoBehaviour
 {
     public GameObject xMarker;
     public GameObject oMarker;
-    public BoardManager boardManager = new BoardManager();
+
+    static private int playerId1 = 1;
+    static private int playerId2 = 2;
+    private BoardManager boardManager = new BoardManager(playerId1, playerId2);
 
     private Camera cam;
     private List<Vector3> cellCenters;
 
-    private int playerId1 = 1;
-    private int playerId2 = 2;
 
     private int currentPlayerId = 1;
 
@@ -57,6 +58,8 @@ public class GameManager : MonoBehaviour
                     boardManager.PlaceMarker(currentPlayerId, closestCell);
                     currentPlayerId = playerId1;
                 }
+                int winningPlayer = boardManager.CheckForWin();
+                Debug.Log(winningPlayer);
             }
         }
     }
