@@ -13,7 +13,9 @@ public class GameManager : MonoBehaviour
     private List<Vector3> cellCenters;
 
     private int playerId1 = 1;
-    private int playerId2 = 10;
+    private int playerId2 = 2;
+
+    private int currentPlayerId = 1;
 
     // Start is called before the first frame update
     void Start()
@@ -43,9 +45,18 @@ public class GameManager : MonoBehaviour
 
             if (boardManager.IsLegalMove(closestCell))
             {
-
-                Instantiate(xMarker, cellCenters[closestCell], Quaternion.identity);
-                boardManager.PlaceMarker(playerId1, closestCell);
+                if (currentPlayerId == playerId1)
+                {
+                    Instantiate(xMarker, cellCenters[closestCell], Quaternion.identity);
+                    boardManager.PlaceMarker(currentPlayerId, closestCell);
+                    currentPlayerId = playerId2;
+                }
+                else
+                {
+                    Instantiate(oMarker, cellCenters[closestCell], Quaternion.identity);
+                    boardManager.PlaceMarker(currentPlayerId, closestCell);
+                    currentPlayerId = playerId1;
+                }
             }
         }
     }
