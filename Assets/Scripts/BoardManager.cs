@@ -49,7 +49,7 @@ namespace TicTacToe
             playerId1 = playerId1In;
             playerId2 = playerId2In;
             cellContents = new List<int>();
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 9; i++)
             {
                 cellContents.Add(playerIdNone);
             }
@@ -113,6 +113,29 @@ namespace TicTacToe
             return isTieGame;
         }
 
+        public int GetComputerMove()
+        {
+            // Get a list of empty cells
+            List<int> emptyCells = new List<int>();
+
+            int cellNumber = 0;
+            foreach (int cell in cellContents)
+            {
+                if (cell == emptyCellValue)
+                {
+                    emptyCells.Add(cellNumber);
+                }
+                cellNumber++;
+            }
+
+            int numEmptyCells = emptyCells.Count();
+            int selectedIndex = Random.Range(0,numEmptyCells);
+            int selectedCell = emptyCells[selectedIndex];
+
+            Debug.Log("SelectedCell: " + selectedCell.ToString());
+            return selectedCell;
+        }
+
         private List<int> GetRowSums()
         {
             List<int> rowSums = new List<int>();
@@ -128,7 +151,5 @@ namespace TicTacToe
 
             return rowSums;
         }
-
-
     }
 }

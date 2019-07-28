@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.UI;
 using TicTacToe;
@@ -19,11 +20,14 @@ public class GameManager : MonoBehaviour
     private BoardManager boardManager;
 
     // Player Ids
-    static private int playerIdNone = 0;
-    static private int playerId1 = 1;
-    static private int playerId2 = 2;
+    static readonly private int playerIdNone = 0;
+    static readonly private int playerId1 = 1;
+    static readonly private int playerId2 = 2;
+
     private int currentPlayerId = 1;
 
+    Dictionary<int, bool> playerIsComputer = new Dictionary<int, bool>();
+    
     // Other game state info
     private bool gameIsOver = false;
 
@@ -69,6 +73,10 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // Set the player types
+        playerIsComputer.Add(playerId1, false);
+        playerIsComputer.Add(playerId2, true);
+
         // Grab the camera
         cam = Camera.main;
 
@@ -78,6 +86,7 @@ public class GameManager : MonoBehaviour
         lineRenderer.widthMultiplier = 0.1f;
         lineRenderer.material.color = Color.black;
 
+        // Finish initializing the game
         ResetGame();
     }
 
@@ -86,8 +95,8 @@ public class GameManager : MonoBehaviour
         currentPlayerId = playerId1;
 
         endGameText.text = "";
-        lineRenderer.SetVertexCount(0);
-        lineRenderer.SetVertexCount(2);
+        lineRenderer.positionCount = 0;
+        lineRenderer.positionCount = 2;
 
         boardManager = new BoardManager(playerIdNone, playerId1, playerId2);
         if (markers.Count > 0)
@@ -106,9 +115,16 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        if (!gameIsOver && playerIsComputer[currentPlayerId])
+        {
+            int computerSelectedCell = boardManager.GetComputerMove();
+            Thread.Sleep(600);
+            HandleCellSelected(computerSelectedCell);
+        }
+
         if (Input.GetMouseButtonDown(0))
         {
-
             if (gameIsOver)
             {
                 ResetGame();
@@ -120,46 +136,51 @@ public class GameManager : MonoBehaviour
 
             if (boardManager.IsLegalMove(closestCell))
             {
-                if (currentPlayerId == playerId1)
-                {
-                    Object newMarker = Instantiate(xMarker, cellCenters[closestCell], Quaternion.identity);
-                    markers.Add(newMarker);
-                    boardManager.PlaceMarker(currentPlayerId, closestCell);
-                    currentPlayerId = playerId2;
-                }
-                else
-                {
-                    Object newMarker = Instantiate(oMarker, cellCenters[closestCell], Quaternion.identity);
-                    markers.Add(newMarker);
-                    boardManager.PlaceMarker(currentPlayerId, closestCell);
-                    currentPlayerId = playerId1;
-                }
-
-                var (winningPlayerId, rowId) = boardManager.CheckForWin();
-
-                if (winningPlayerId == playerId1)
-                {
-                    lineRenderer.SetPosition(0, rowStarts[rowId]);
-                    lineRenderer.SetPosition(1, rowEnds[rowId]);
-                    endGameText.text = "Player1 Wins!";
-                    gameIsOver = true;
-                }
-                else if (winningPlayerId == playerId2)
-                {
-                    lineRenderer.SetPosition(0, rowStarts[rowId]);
-                    lineRenderer.SetPosition(1, rowEnds[rowId]);
-                    endGameText.text = "Player2 Wins!";
-                    gameIsOver = true;
-                }
-                else if (boardManager.IsTieGame())
-                {
-                    endGameText.text = "Tie Game!";
-                    gameIsOver = true;
-                }
+                HandleCellSelected(closestCell);
             }
         }
     }
 
+    void HandleCellSelected(int selectedCell)
+    {
+        if (currentPlayerId == playerId1)
+        {
+            Object newMarker = Instantiate(xMarker, cellCenters[selectedCell], Quaternion.identity);
+            markers.Add(newMarker);
+            boardManager.PlaceMarker(currentPlayerId, selectedCell);
+            currentPlayerId = playerId2;
+        }
+        else
+        {
+            Object newMarker = Instantiate(oMarker, cellCenters[selectedCell], Quaternion.identity);
+            markers.Add(newMarker);
+            boardManager.PlaceMarker(currentPlayerId, selectedCell);
+            currentPlayerId = playerId1;
+        }
+
+        var (winningPlayerId, rowId) = boardManager.CheckForWin();
+
+        if (winningPlayerId == playerId1)
+        {
+            lineRenderer.SetPosition(0, rowStarts[rowId]);
+            lineRenderer.SetPosition(1, rowEnds[rowId]);
+            endGameText.text = "Player1 Wins!";
+            gameIsOver = true;
+        }
+        else if (winningPlayerId == playerId2)
+        {
+            lineRenderer.SetPosition(0, rowStarts[rowId]);
+            lineRenderer.SetPosition(1, rowEnds[rowId]);
+            endGameText.text = "Player2 Wins!";
+            gameIsOver = true;
+        }
+        else if (boardManager.IsTieGame())
+        {
+            endGameText.text = "Tie Game!";
+            gameIsOver = true;
+        }
+    }
+       
     /// <summary>
     /// Finds the cell center closest to the clickPosition.
     /// </summary>
