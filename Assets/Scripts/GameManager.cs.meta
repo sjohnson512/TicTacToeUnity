@@ -8,6 +8,8 @@ MonoImporter:
       type: 3}
   - oMarker: {fileID: 2650077694942741908, guid: 6ba4d7ca6a43c364d91e121739c56040,
       type: 3}
+  - endGameText: {fileID: 3033354246925312439, guid: e93f5e6364196b8478e1d31d5ddaee74,
+      type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TicTacToe;
 
 public class GameManager : MonoBehaviour
@@ -9,9 +10,10 @@ public class GameManager : MonoBehaviour
     // Game Objects
     public GameObject xMarker;
     public GameObject oMarker;
+    public Text endGameText;
     private Camera cam;
     private LineRenderer lineRenderer;
-
+   
     // Board logic
     private BoardManager boardManager = new BoardManager(playerIdNone, playerId1, playerId2);
 
@@ -70,8 +72,8 @@ public class GameManager : MonoBehaviour
         lineRenderer = gameObject.AddComponent<LineRenderer>();
         lineRenderer.positionCount = 2;
         lineRenderer.widthMultiplier = 0.1f;
-        lineRenderer.material.color = Color.black;
- 
+        lineRenderer.material.color = Color.gray;
+
     }
 
     // Update is called once per frame
@@ -103,12 +105,13 @@ public class GameManager : MonoBehaviour
                 {
                     lineRenderer.SetPosition(0, rowStarts[rowId]);
                     lineRenderer.SetPosition(1, rowEnds[rowId]);
+                    endGameText.text = "Player1 Wins!";
                 }
                 else if (winningPlayerId == playerId2)
                 {
                     lineRenderer.SetPosition(0, rowStarts[rowId]);
                     lineRenderer.SetPosition(1, rowEnds[rowId]);
-
+                    endGameText.text = "Player2 Wins!";
                 }
             }
         }
