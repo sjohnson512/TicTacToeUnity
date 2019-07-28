@@ -88,7 +88,8 @@ public class GameManager : MonoBehaviour
         lineRenderer = gameObject.AddComponent<LineRenderer>();
         lineRenderer.positionCount = 2;
         lineRenderer.widthMultiplier = 0.1f;
-        lineRenderer.material.color = Color.black;
+        lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
+        lineRenderer.SetColors(Color.black, Color.black);
 
         // Finish initializing the game
         ResetGame();
