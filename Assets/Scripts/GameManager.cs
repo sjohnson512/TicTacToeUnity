@@ -13,15 +13,19 @@ public class GameManager : MonoBehaviour
     public Text endGameText;
     private Camera cam;
     private LineRenderer lineRenderer;
+    private List<Object> markers = new List<Object>();
    
     // Board logic
-    private BoardManager boardManager = new BoardManager(playerIdNone, playerId1, playerId2);
+    private BoardManager boardManager;
 
     // Player Ids
     static private int playerIdNone = 0;
     static private int playerId1 = 1;
     static private int playerId2 = 2;
     private int currentPlayerId = 1;
+
+    // Other game state info
+    private bool gameIsOver = false;
 
     // Center points for each cell.  See summary of BoardManager for how cells in the board are organized.
     private List<Vector3> cellCenters = new List<Vector3>
@@ -72,8 +76,31 @@ public class GameManager : MonoBehaviour
         lineRenderer = gameObject.AddComponent<LineRenderer>();
         lineRenderer.positionCount = 2;
         lineRenderer.widthMultiplier = 0.1f;
-        lineRenderer.material.color = Color.gray;
+        lineRenderer.material.color = Color.black;
 
+        ResetGame();
+    }
+
+    void ResetGame()
+    {
+        currentPlayerId = playerId1;
+
+        endGameText.text = "";
+        lineRenderer.SetVertexCount(0);
+        lineRenderer.SetVertexCount(2);
+
+        boardManager = new BoardManager(playerIdNone, playerId1, playerId2);
+        if (markers.Count > 0)
+        { 
+            foreach (Object marker in markers)
+            {
+                Destroy(marker);
+            }
+        }
+
+        gameIsOver = false;
+
+        return;
     }
 
     // Update is called once per frame
@@ -81,6 +108,13 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
+
+            if (gameIsOver)
+            {
+                ResetGame();
+                return;
+            }
+
             Vector3 clickPosition = cam.ScreenToWorldPoint(Input.mousePosition);
             int closestCell = GetClosestCell(clickPosition);
 
@@ -88,35 +122,39 @@ public class GameManager : MonoBehaviour
             {
                 if (currentPlayerId == playerId1)
                 {
-                    Instantiate(xMarker, cellCenters[closestCell], Quaternion.identity);
+                    Object newMarker = Instantiate(xMarker, cellCenters[closestCell], Quaternion.identity);
+                    markers.Add(newMarker);
                     boardManager.PlaceMarker(currentPlayerId, closestCell);
                     currentPlayerId = playerId2;
                 }
                 else
                 {
-                    Instantiate(oMarker, cellCenters[closestCell], Quaternion.identity);
+                    Object newMarker = Instantiate(oMarker, cellCenters[closestCell], Quaternion.identity);
+                    markers.Add(newMarker);
                     boardManager.PlaceMarker(currentPlayerId, closestCell);
                     currentPlayerId = playerId1;
                 }
 
                 var (winningPlayerId, rowId) = boardManager.CheckForWin();
-                // Debug.Log(winningPlayerId);
 
                 if (winningPlayerId == playerId1)
                 {
                     lineRenderer.SetPosition(0, rowStarts[rowId]);
                     lineRenderer.SetPosition(1, rowEnds[rowId]);
                     endGameText.text = "Player1 Wins!";
+                    gameIsOver = true;
                 }
                 else if (winningPlayerId == playerId2)
                 {
                     lineRenderer.SetPosition(0, rowStarts[rowId]);
                     lineRenderer.SetPosition(1, rowEnds[rowId]);
                     endGameText.text = "Player2 Wins!";
+                    gameIsOver = true;
                 }
                 else if (boardManager.IsTieGame())
                 {
                     endGameText.text = "Tie Game!";
+                    gameIsOver = true;
                 }
             }
         }
