@@ -98,8 +98,9 @@ public class GameManager : MonoBehaviour
                     boardManager.PlaceMarker(currentPlayerId, closestCell);
                     currentPlayerId = playerId1;
                 }
+
                 var (winningPlayerId, rowId) = boardManager.CheckForWin();
-                Debug.Log(winningPlayerId);
+                // Debug.Log(winningPlayerId);
 
                 if (winningPlayerId == playerId1)
                 {
@@ -112,6 +113,10 @@ public class GameManager : MonoBehaviour
                     lineRenderer.SetPosition(0, rowStarts[rowId]);
                     lineRenderer.SetPosition(1, rowEnds[rowId]);
                     endGameText.text = "Player2 Wins!";
+                }
+                else if (boardManager.IsTieGame())
+                {
+                    endGameText.text = "Tie Game!";
                 }
             }
         }

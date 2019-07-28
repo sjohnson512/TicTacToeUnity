@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 namespace TicTacToe
 {
@@ -95,6 +96,21 @@ namespace TicTacToe
             }
 
             return (playerIdNone, -1);
+        }
+
+        public bool IsTieGame()
+        {
+            int numFullCells = 0;
+            foreach (int cellValue in cellContents)
+            {
+                if (cellValue != emptyCellValue)
+                {
+                    numFullCells++;
+                }
+            }
+
+            bool isTieGame = numFullCells == 9;
+            return isTieGame;
         }
 
         private List<int> GetRowSums()
