@@ -1,4 +1,4 @@
-This project creates a TicTacToe game in Unity.
+This project contains a TicTacToe game developed in Unity2019.
 
 Developed and tested using Unity 2019.1.11f1 on Windows 10.
 
