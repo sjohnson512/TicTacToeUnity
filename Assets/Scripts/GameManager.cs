@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
     private bool gameIsOver = false;
 
     // Center points for each cell.  See summary of BoardManager for how cells in the board are organized.
+    // TODO: Write some tests to ensure that all of the lists of cells and rows stay synchronized.
     private List<Vector3> cellCenters = new List<Vector3>
         {
             new Vector3(-2.0f,  2.0f, 0.0f),
